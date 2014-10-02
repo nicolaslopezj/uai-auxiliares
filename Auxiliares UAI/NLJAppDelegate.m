@@ -8,7 +8,7 @@
 
 #import "NLJAppDelegate.h"
 
-#import "NLJMasterViewController.h"
+#import "NLJEventsViewController.h"
 
 @implementation NLJAppDelegate
 
@@ -23,9 +23,12 @@
     UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
     splitViewController.delegate = (id)navigationController.topViewController;
 
+    /*
     UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
-    NLJMasterViewController *controller = (NLJMasterViewController *)masterNavigationController.topViewController;
+    NLJEventsViewController *controller = (NLJEventsViewController *)masterNavigationController.topViewController;
     controller.managedObjectContext = self.managedObjectContext;
+    */
+    
     return YES;
 }
 							
