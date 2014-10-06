@@ -9,6 +9,7 @@
 #import "NLJAppDelegate.h"
 
 #import "NLJEventsViewController.h"
+#import "NLJHelper.h"
 
 @implementation NLJAppDelegate
 
@@ -16,8 +17,29 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
+
+- (void)checkLoginDate
+{
+    NSDate *lastUsed = (NSDate *)[NLJHelper defaultsValueForKey:@"last_used"];
+    if (lastUsed == nil) {
+        [NLJHelper setDefaultsValue:@"" forKey:@"aux_id"];
+    }
+    NSDate *thirtyMinAgo = [[NSDate date] dateByAddingTimeInterval:-1 * 60 * 30]; /* 30 min menos */
+    
+    if ([lastUsed compare:thirtyMinAgo] == NSOrderedAscending)  {
+        // Sacar
+        NSLog(@"Logging out: %@ %@", thirtyMinAgo, lastUsed);
+        [NLJHelper setDefaultsValue:@"" forKey:@"aux_id"];
+    } else {
+        // No sacar
+        NSLog(@"Not logging out: %@ %@", thirtyMinAgo, lastUsed);
+    }
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [self checkLoginDate];
+    
     // Override point for customization after application launch.
     UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
     UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
@@ -40,6 +62,11 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+    // Save last closed
+    NSLog(@"Closing app");
+    NSDate *lastUsed = [NSDate date];
+    [NLJHelper setDefaultsValue:lastUsed forKey:@"last_used"];
+    
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
@@ -51,6 +78,8 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    [self checkLoginDate];
+    
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 

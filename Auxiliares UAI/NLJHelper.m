@@ -134,6 +134,7 @@
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:uploadURL]];
     [request setHTTPMethod:@"POST"];
     
+    NSLog(@"Uploading Events: %@", events);
     NSData *JSONData = [NSJSONSerialization dataWithJSONObject:events options:kNilOptions error:nil];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];

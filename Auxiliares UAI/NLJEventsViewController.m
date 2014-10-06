@@ -40,12 +40,20 @@
 	// Do any additional setup after loading the view, typically from a nib.
     self.detailViewController = (NLJEventViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(didBecomeActive)
+                                                name:UIApplicationDidBecomeActiveNotification
+                                              object:nil];
+    
+}
+
+- (void)didBecomeActive
+{
     if ([NLJHelper isLoggedIn]) {
         [self downloadData];
     } else {
         [self showLoginView];
     }
-    
 }
 
 - (void)logout:(id)sender
@@ -179,10 +187,12 @@
     NSMutableArray *checks = [[NSMutableArray alloc] init];
     for (Check *check in checksObject) {
         [checks addObject:[[NSDictionary alloc] initWithObjects:@[[check.event stringValue],
+                                                                  check.aux_id,
                                                                 [check stringFromDate],
                                                                 check.type,
                                                                 check.comment]
                                                         forKeys:@[@"idclases",
+                                                                  @"aux_id",
                                                                 @"fechaHoraChequeo",
                                                                 @"tipoChequeo",
                                                                 @"Comentario"]]];
